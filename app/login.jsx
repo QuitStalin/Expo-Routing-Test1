@@ -42,6 +42,10 @@ export default function LoginScreen() {
     RadioCanadaLight: RadioCanada_300Light,
   });
 
+  if (!fontsLoaded) {
+    return null; // or return a loading spinner/component
+  }
+
   const handleLogin = () => {
     if (name === "admin" && password === "admin") {
       router.replace("/main");

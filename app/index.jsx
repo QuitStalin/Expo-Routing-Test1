@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   illustrationSection: {
-    height: "20%", // 25% of the screen height
+    height: "20%", // 20% of the screen height
   },
   image: {
     width: "100%",
