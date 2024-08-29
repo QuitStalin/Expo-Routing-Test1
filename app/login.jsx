@@ -1,4 +1,4 @@
-// app/login.js
+// app/signup.js
 import React, { useState } from "react";
 import {
   View,
@@ -7,6 +7,8 @@ import {
   Button,
   StyleSheet,
   TouchableOpacity,
+  SafeAreaView,
+  StatusBar,
 } from "react-native";
 import { useRouter } from "expo-router";
 import {
@@ -41,15 +43,26 @@ export default function LoginScreen() {
   });
 
   const handleLogin = () => {
-    router.replace("/main");
+    if (name === "admin" && password === "admin") {
+      router.replace("/main");
+    } else {
+      alert("Incorrect name or password. Please try again.");
+    }
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <StatusBar
+        barStyle="dark-content" // for dark mode content on status bar
+        backgroundColor="#F4CE14" // dark background color for status bar
+        translucent={true} // to make status bar translucent
+      />
+
       <View style={styles.title}>
         <Animated.Text style={styles.titleText1}>Dobro Došli!</Animated.Text>
         <Animated.Text style={styles.titleText2}>Login:</Animated.Text>
       </View>
+
       <View style={styles.logoContainer}>
         <Animated.Image
           entering={FadeInUp.delay(200).duration(1000).springify()}
@@ -63,6 +76,7 @@ export default function LoginScreen() {
           "Ride Smart, Ride Easy."
         </Animated.Text>
       </View>
+
       <View style={styles.form}>
         <Animated.View
           entering={FadeInLeft.delay(400).duration(1000)}
@@ -81,20 +95,6 @@ export default function LoginScreen() {
           entering={FadeInLeft.delay(600).duration(1000)}
           style={styles.inputGroup}
         >
-          <Text style={styles.label}>Email</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="mojemail@gmail.com"
-            keyboardType="email-address"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-          />
-        </Animated.View>
-
-        <Animated.View
-          entering={FadeInLeft.delay(800).duration(1000)}
-          style={styles.inputGroup}
-        >
           <Text style={styles.label}>Lozinka</Text>
           <TextInput
             style={styles.input}
@@ -104,18 +104,19 @@ export default function LoginScreen() {
             onChangeText={(text) => setPassword(text)}
           />
         </Animated.View>
-
+      </View>
+      <View style={styles.buttonsContainer}>
         <AnimatedTouchable
           entering={FadeInDown.delay(300).duration(1000)}
           style={styles.button}
-          onPress={() => router.push("/login")}
+          onPress={handleLogin}
         >
           <Text style={styles.buttonText}>Login</Text>
         </AnimatedTouchable>
         <AnimatedTouchable
           entering={FadeInDown.delay(500).duration(1000)}
           style={[styles.button, styles.button2]}
-          onPress={() => router.push("/signup")}
+          onPress={() => router.push("../")}
         >
           <Animated.Image
             source={require("./assets/Google.png")}
@@ -123,18 +124,20 @@ export default function LoginScreen() {
           />
         </AnimatedTouchable>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    paddingTop: StatusBar.currentHeight,
     backgroundColor: "#F4CE14",
-    height: "100%",
   },
   title: {
-    padding: 20,
-    marginTop: 40,
+    height: "20%",
+    paddingLeft: 20,
+    justifyContent: "center",
     backgroundColor: "#272727",
   },
   titleText1: {
@@ -153,8 +156,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   logoContainer: {
-    height: 130,
-    marginTop: 20,
+    height: "25%",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -163,11 +165,12 @@ const styles = StyleSheet.create({
     height: 39,
   },
   form: {
-    height: "100%",
-    paddingHorizontal: 20,
+    height: "30%",
+    justifyContent: "space-evenly",
+    alignItems: "center",
   },
   inputGroup: {
-    marginBottom: 20,
+    width: "85%",
   },
   label: {
     fontSize: 16,
@@ -182,8 +185,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: "transparent",
   },
+  buttonsContainer: {
+    height: "25%",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+  },
   button: {
-    width: "100%",
+    width: "85%",
     color: "#F4CE14",
     borderWidth: 2,
     borderRadius: 13,
@@ -192,7 +200,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#272727",
     borderColor: "transparent",
-    marginTop: 20,
   },
   buttonText: {
     fontFamily: "RadioCanadaSemiBold",
@@ -200,7 +207,6 @@ const styles = StyleSheet.create({
     color: "#F4CE14",
   },
   button2: {
-    marginTop: 15,
     backgroundColor: "white",
     borderColor: "transparent",
   },

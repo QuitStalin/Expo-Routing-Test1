@@ -1,10 +1,22 @@
 // app/signup.js
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  StatusBar,
+} from "react-native";
 import { useRouter } from "expo-router";
 import {
   useFonts,
+  RadioCanada_400Regular,
   RadioCanada_600SemiBold,
+  RadioCanada_700Bold,
+  RadioCanada_300Light,
 } from "@expo-google-fonts/radio-canada";
 import Animated from "react-native-reanimated";
 import {
@@ -13,6 +25,9 @@ import {
   FadeInDown,
   FadeInLeft,
 } from "react-native-reanimated";
+
+const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
+
 export default function SignupScreen() {
   const router = useRouter();
 
@@ -20,16 +35,30 @@ export default function SignupScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSignUp = () => {
+  const [fontsLoaded] = useFonts({
+    RadioCanadaRegular: RadioCanada_400Regular,
+    RadioCanadaSemiBold: RadioCanada_600SemiBold,
+    RadioCanadaBold: RadioCanada_700Bold,
+    RadioCanadaLight: RadioCanada_300Light,
+  });
+
+  const handleSignup = () => {
     router.replace("/main");
   };
 
   return (
-    <View>
+    <SafeAreaView style={styles.container}>
+      <StatusBar
+        barStyle="dark-content" // for dark mode content on status bar
+        backgroundColor="#F4CE14" // dark background color for status bar
+        translucent={true} // to make status bar translucent
+      />
+
       <View style={styles.title}>
-        <Animated.Text>Dobro Došli!</Animated.Text>
-        <Animated.Text>Login:</Animated.Text>
+        <Animated.Text style={styles.titleText1}>Dobro Došli!</Animated.Text>
+        <Animated.Text style={styles.titleText2}>Sign Up:</Animated.Text>
       </View>
+
       <View style={styles.logoContainer}>
         <Animated.Image
           entering={FadeInUp.delay(200).duration(1000).springify()}
@@ -43,8 +72,12 @@ export default function SignupScreen() {
           "Ride Smart, Ride Easy."
         </Animated.Text>
       </View>
+
       <View style={styles.form}>
-        <View style={styles.inputGroup}>
+        <Animated.View
+          entering={FadeInLeft.delay(400).duration(1000)}
+          style={styles.inputGroup}
+        >
           <Text style={styles.label}>Ime</Text>
           <TextInput
             style={styles.input}
@@ -52,8 +85,12 @@ export default function SignupScreen() {
             value={name}
             onChangeText={(text) => setName(text)}
           />
-        </View>
-        <View style={styles.inputGroup}>
+        </Animated.View>
+
+        <Animated.View
+          entering={FadeInLeft.delay(600).duration(1000)}
+          style={styles.inputGroup}
+        >
           <Text style={styles.label}>Email</Text>
           <TextInput
             style={styles.input}
@@ -62,8 +99,12 @@ export default function SignupScreen() {
             value={email}
             onChangeText={(text) => setEmail(text)}
           />
-        </View>
-        <View style={styles.inputGroup}>
+        </Animated.View>
+
+        <Animated.View
+          entering={FadeInLeft.delay(800).duration(1000)}
+          style={styles.inputGroup}
+        >
           <Text style={styles.label}>Lozinka</Text>
           <TextInput
             style={styles.input}
@@ -72,21 +113,61 @@ export default function SignupScreen() {
             value={password}
             onChangeText={(text) => setPassword(text)}
           />
-        </View>
+        </Animated.View>
       </View>
-    </View>
+      <View style={styles.buttonsContainer}>
+        <AnimatedTouchable
+          entering={FadeInDown.delay(300).duration(1000)}
+          style={styles.button}
+          onPress={() => router.push("/signup")}
+        >
+          <Text style={styles.buttonText}>Sign Up</Text>
+        </AnimatedTouchable>
+        <AnimatedTouchable
+          entering={FadeInDown.delay(500).duration(1000)}
+          style={[styles.button, styles.button2]}
+          onPress={() => router.push("../")}
+        >
+          <Animated.Image
+            source={require("./assets/Google.png")}
+            style={{ width: 25, height: 25 }}
+          />
+        </AnimatedTouchable>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: StatusBar.currentHeight,
+    backgroundColor: "#F4CE14",
+  },
   title: {
-    marginTop: 40,
-    height: 150,
+    flex: 0.2,
+    paddingLeft: 20,
+    justifyContent: "center",
     backgroundColor: "#272727",
   },
+  titleText1: {
+    fontFamily: "RadioCanadaRegular",
+    fontSize: 15,
+    color: "#F4CE14",
+  },
+  titleText2: {
+    fontFamily: "RadioCanadaBold",
+    fontSize: 50,
+    color: "#F4CE14",
+  },
+  regularText: {
+    fontFamily: "RadioCanadaSemiBold",
+    fontSize: 16,
+    marginTop: 5,
+  },
   logoContainer: {
-    height: 170,
-    justifyContent: "center",
+    flex: 0.15,
+    justifyContent: "flex-end",
     alignItems: "center",
   },
   logo: {
@@ -94,14 +175,16 @@ const styles = StyleSheet.create({
     height: 39,
   },
   form: {
-    paddingHorizontal: 20,
+    flex: 0.4,
+    justifyContent: "space-evenly",
+    alignItems: "center",
   },
   inputGroup: {
-    marginBottom: 20,
+    width: "85%",
   },
   label: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: "RadioCanadaSemiBold",
     marginBottom: 5,
     color: "#272727",
   },
@@ -111,5 +194,30 @@ const styles = StyleSheet.create({
     borderBottomColor: "#272727",
     paddingHorizontal: 10,
     backgroundColor: "transparent",
+  },
+  buttonsContainer: {
+    flex: 0.25,
+    justifyContent: "space-evenly",
+    alignItems: "center",
+  },
+  button: {
+    width: "85%",
+    color: "#F4CE14",
+    borderWidth: 2,
+    borderRadius: 13,
+    padding: 12,
+    color: "black",
+    alignItems: "center",
+    backgroundColor: "#272727",
+    borderColor: "transparent",
+  },
+  buttonText: {
+    fontFamily: "RadioCanadaSemiBold",
+    fontSize: 17,
+    color: "#F4CE14",
+  },
+  button2: {
+    backgroundColor: "white",
+    borderColor: "transparent",
   },
 });
